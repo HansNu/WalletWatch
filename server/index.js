@@ -1,16 +1,26 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv');
+const supabase = require('./service/supabaseClient');
+const userRoutes = require('./routes/userRoutes');
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.port || 4000;
+const port = 4200;
+const baseUrl = '/api';
 
 app.use(cors());
 app.use(express.json());
 
-app.get('api/message', (req, res) => {
+app.get(baseUrl + '/message', (req, res) => {
     res.json({message : 'Hello from the Express Server'});
 });
 
-app.listen(PORT, () =>{
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.use(baseUrl, userRoutes);   
+
+app.listen(port, () =>{
+    console.log(`Server is running on http://localhost:${port}`);
 });
+
+module.exports = app;
