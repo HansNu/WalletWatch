@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Server",
+      "program": "${workspaceFolder}/server/index.js",
+      "envFile": "${workspaceFolder}/server/.env",
+      "console": "integratedTerminal",
+      "restart": true,
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"], 
+      "cwd": "${workspaceFolder}/server"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Client",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/client/src",
+      "sourceMaps": true,
+      "timeout": 10000
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full App",
+      "configurations": ["Debug Server", "Debug Client"]
+    }
+  ]
+}
