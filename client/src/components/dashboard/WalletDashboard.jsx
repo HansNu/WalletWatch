@@ -11,14 +11,14 @@ function WalletDashboard() {
   ];
 
   return (
-    <div className="min-h-screen text-white">
-      {/* Container with max width for larger screens */}
-      <div className="max-w mx-auto bg-white text-black">
+    <div className="min-h-screen bg-white">
         {/* Header */}
-        <div className="bg-gray-900 text-white p-6 pb-4 text-center">
+        <div className="top bg-gray-900 text-white p-6 text-center">
           <h1 className="text-xl font-semibold">Summary</h1>
         </div>
 
+      {/* Container with max width for larger screens */}
+      <div className="max-w-3xl mx-auto text-black py-5">
         {/* Content */}
         <div className="p-6 space-y-4">
           {/* Total Balance Card */}
@@ -89,8 +89,8 @@ function WalletDashboard() {
         </button>
 
         {/* Bottom Navigation */}
-        <div className="bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
-          <div className="max-w-md mx-auto flex justify-around items-center py-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
+          <div className="max-w-md mx-auto flex justify-around items-center py-6">
             {/* Home Icon */}
             <button className="flex flex-col items-center">
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

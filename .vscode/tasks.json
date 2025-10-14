@@ -14,7 +14,7 @@
         "reveal": "always",
         "focus": false,
         "panel": "new"
-      },
+      }
     },
     {
       "label": "npm: dev:client",
