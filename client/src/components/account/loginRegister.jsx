@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Wallet } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
+import {routes} from '../../../constants/navigationRoutes';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -35,8 +38,7 @@ export default function Login() {
       setMessage(`Login failed: ${error.message}`);
     } else {
       setMessage('✅ Login successful! Redirecting...');
-      // Optional: redirect to dashboard
-      // window.location.href = '/dashboard';
+      navigate(routes.walletDashboard);
     }
 
     setLoading(false);
@@ -66,7 +68,8 @@ export default function Login() {
     if (error) {
       setMessage(`Registration failed: ${error}`);
     } else {
-      setMessage('✅ Account created! Please check your email to confirm.');
+      setMessage('✅ Account created! You can proceed to log in');
+      setIsLogin(true);
     }
 
     setLoading(false);

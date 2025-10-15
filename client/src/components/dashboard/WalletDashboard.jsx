@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Plus } from 'lucide-react';
+import { supabase } from '../../supabaseClient';
 
 function WalletDashboard() {
   const transactions = [
@@ -9,6 +10,10 @@ function WalletDashboard() {
     { id: 4, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
     { id: 5, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
   ];
+
+  const getTotalBalance = async () => {
+    const {data, error} = await supabase.from('money_account')
+  }
 
   return (
     <div className="min-h-screen bg-white">

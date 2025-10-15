@@ -5,24 +5,18 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Server",
-      "program": "${workspaceFolder}/server/index.js",
-      "envFile": "${workspaceFolder}/server/.env",
-      "console": "integratedTerminal",
-      "restart": true,
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
       "cwd": "${workspaceFolder}/server",
-      "preLaunchTask": "npm: start:server"
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "debug"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/server/.env"
     },
     {
       "type": "chrome",
       "request": "launch",
       "name": "Debug Client",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/client",
-      "sourceMaps": true,
-      "timeout": 30000,
-      "preLaunchTask": "npm: dev:client"
+      "webRoot": "${workspaceFolder}/client"
     }
   ],
   "compounds": [
