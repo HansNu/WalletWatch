@@ -1,36 +1,57 @@
 import React from 'react';
 import { ArrowRight, Plus } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
-import { walletApi } from '../../constants/urlConstant';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { urlconstant } from '../../constants/urlConstant';
+import Cookies from 'js-cookie';
 
 function WalletDashboard() {
-
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState([]);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    const fetchUser = async () => {
+    (async () => {
       try {
-        // ✅ This already returns the parsed JSON object
-        const userData = await walletApi.getUserByUserId('c4437e1c-a414-45a1-b8e4-862f4ab671a6');
-        console.log('User data:', userData); // 👈 This is your test!
-        setUser(userData);
-      } catch (err) {
-        console.error('API call failed:', err);
-        setError('Failed to load user data');
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const reqIncome = {
+          userId: user.id,
+          transactionType: 'Income'
+        }
+
+        const reqExpense = {
+          userId: user.id,
+          transactionType: 'Expense'
+        }
+
+        const totalBalance = await axios.post(urlconstant.getTotalBalanceByUserId, {userId: user.id});
+
+        const incomeAmt = await axios.post(urlconstant.getIncomeExpenseByUserIdAndTransactionType, reqIncome);
+
+        const expenseAmt = await axios.post(urlconstant.getIncomeExpenseByUserIdAndTransactionType, reqExpense);
+
+        setTotalBalance(totalBalance.data);
+        setIncome(incomeAmt.data);
+        setExpense(expenseAmt.data);
+        
+      } 
+      catch (err) {
+        console.error('Error:', err);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchUser();
+    })();
   }, []);
 
-  if (loading) return <div className="min-h-screen bg-white p-6">Loading...</div>;
-  if (error) return <div className="min-h-screen bg-white p-6 text-red-500">{error}</div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
 
   return (
@@ -47,7 +68,7 @@ function WalletDashboard() {
           {/* Total Balance Card */}
           <div className="bg-gray-200 rounded-2xl p-6">
             <p className="text-sm text-gray-600 mb-2">Total Balance</p>
-            <p className="text-4xl font-bold">Rp125.000.000</p>
+            <p className="text-4xl font-bold">{totalBalance}</p>
           </div>
 
           {/* Income and Expense Cards */}
@@ -55,13 +76,13 @@ function WalletDashboard() {
             {/* Income Card */}
             <div className="bg-gray-200 rounded-2xl p-4">
               <p className="text-sm text-gray-600 mb-2">Income</p>
-              <p className="text-2xl font-bold">Rp25.000.000</p>
+              <p className="text-2xl font-bold">{income}</p>
             </div>
 
             {/* Expense Card */}
             <div className="bg-gray-200 rounded-2xl p-4">
               <p className="text-sm text-gray-600 mb-2">Expense</p>
-              <p className="text-2xl font-bold">Rp20.000.000</p>
+              <p className="text-2xl font-bold">{expense}</p>
             </div>
           </div>
 

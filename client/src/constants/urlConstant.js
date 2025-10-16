@@ -1,38 +1,14 @@
-// src/api/client.js
-const API_BASE = '/WalletAPI'; // This will be proxied by Vite
+const baseUrl = 'http://localhost:4200/api/'
 
-const apiClient = async (endpoint, options = {}) => {
-  const config = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Add auth headers here later if needed, e.g.:
-      // 'Authorization': `Bearer ${localStorage.getItem('token')}`
-    },
-    ...options,
-    body: options.body ? JSON.stringify(options.body) : undefined
-  };
+export const urlconstant = {
+  baseUrl,
+  //user
+  getUserByUserId : `${baseUrl}user/getUserByUserId`,
 
-  try {
-    const response = await fetch(`${API_BASE}${endpoint}`, config);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  //account
+  getTotalBalanceByUserId : `${baseUrl}account/getTotalBalanceByUserId`,
 
-    return await response.json();
-  } catch (error) {
-    console.error('API call failed:', error);
-    throw error;
-  }
-};
 
-export const walletApi = {
-  getUserByUserId: (userId) => 
-    apiClient('/user/getUserByUserId', {
-      method: 'POST',
-      body: { userId }
-    }),
-};
-
-export default walletApi;
+  //transaction
+  getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`
+}
