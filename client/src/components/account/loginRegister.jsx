@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Wallet } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
-import {routes} from '../../../constants/navigationRoutes';
+import {routes} from '../../constants/navigationRoutes';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {

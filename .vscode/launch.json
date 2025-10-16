@@ -16,7 +16,9 @@
       "request": "launch",
       "name": "Debug Client",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/client"
+      "webRoot": "${workspaceFolder}/client/src",
+      "sourceMaps": true,
+      "timeout": 10000
     }
   ],
   "compounds": [

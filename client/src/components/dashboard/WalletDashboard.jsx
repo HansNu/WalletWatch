@@ -1,19 +1,37 @@
 import React from 'react';
 import { ArrowRight, Plus } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
+import { walletApi } from '../../constants/urlConstant';
+import { useEffect, useState } from 'react';
 
 function WalletDashboard() {
-  const transactions = [
-    { id: 1, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
-    { id: 2, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
-    { id: 3, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
-    { id: 4, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
-    { id: 5, name: 'Transaksi di Daring Deli', category: 'Food', date: '02 Oktober 2025, 20:30', amount: 'Rp205.000' },
-  ];
 
-  const getTotalBalance = async () => {
-    const {data, error} = await supabase.from('money_account')
-  }
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        // ✅ This already returns the parsed JSON object
+        const userData = await walletApi.getUserByUserId('c4437e1c-a414-45a1-b8e4-862f4ab671a6');
+        console.log('User data:', userData); // 👈 This is your test!
+        setUser(userData);
+      } catch (err) {
+        console.error('API call failed:', err);
+        setError('Failed to load user data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if (loading) return <div className="min-h-screen bg-white p-6">Loading...</div>;
+  if (error) return <div className="min-h-screen bg-white p-6 text-red-500">{error}</div>;
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -93,6 +111,7 @@ function WalletDashboard() {
           <Plus className="w-6 h-6" />
         </button>
 
+      </div>
         {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
           <div className="max-w-md mx-auto flex justify-around items-center py-6">
@@ -125,7 +144,6 @@ function WalletDashboard() {
             </button>
           </div>
         </div>
-      </div>
     </div>
   );
 }
