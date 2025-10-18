@@ -7,8 +7,12 @@ export const urlconstant = {
 
   //account
   getTotalBalanceByUserId : `${baseUrl}account/getTotalBalanceByUserId`,
+  updateIncomeByAccountId : `${baseUrl}account/updateIncomeByAccountId`,
 
 
   //transaction
-  getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`
+  getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,
+  getLatestTransactionRecord : `${baseUrl}transaction/getLatestTransactionRecord`,
+  addNewTransaction : `${baseUrl}transaction/addNewTransaction`,
+
 }

@@ -1,47 +1,69 @@
-const supabase = require('../service/supabaseClient')
+// controller/transactionController.js
+const transactionService = require('../service/transactionService');
 
-class transactionController {
+class TransactionController {
+  async getIncomeExpenseByUserIdAndTransactionType(req, res) {
+    try {
+      const { userId, transactionType } = req.body;
 
-    async getIncomeExpenseByUserIdAndTransactionType(req, res){
-        const reqData = req.body;
+      if (!userId || !transactionType) {
+        return res.status(400).json({ message: 'userId and transactionType are required' });
+      }
 
-        if(!reqData) {
-            return res.status(400).json({
-                message: `Invalid Request`
-            });
-        }
+      const total = await transactionService.getIncomeExpenseByUserIdAndTransactionType(
+        userId,
+        transactionType
+      );
 
-        const {data, error} = await supabase.from('transaction_history').select('transaction_amount').eq('user_id', reqData.userId).eq('transaction_type', reqData.transactionType);
-
-        if(error){
-            return res.status(400).json(error);
-        }
-
-        let transactionAmt = 0;
-        
-        for(let i = 0; i<data.length; i++){
-            transactionAmt += data[i].transaction_amount;
-        }
-        
-        return res.status(200).json(transactionAmt);
+      return res.status(200).json({ total });
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
     }
+  }
 
-    async getLatestTransactionRecord(req, res){
-        const record = req.body;
+  async getLatestTransactionRecord(req, res) {
+    try {
+      const { userId } = req.body;
 
-        if(!record) {
-            return res.status(400).json({
-                message: `Invalid Request`
-            });
-        }
+      if (!userId) {
+        return res.status(400).json({ message: 'userId is required' });
+      }
 
-        const {data, error} = await supabase.from('transaction_history').select('*').eq('user_id', record.userId);
-        if(error){
-            return res.status(400).json(error);
-        }
-
-        return res.status(200).json(data);
+      const transactions = await transactionService.getLatestTransactionRecord(userId);
+      return res.status(200).json(transactions);
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
     }
+  }
+
+  async addNewTransaction(req, res) {
+    try {
+      const record = req.body;
+
+      if (!record || !record.userId || !record.transactionAmount || !record.transactionType) {
+        return res.status(400).json({ message: 'Missing required fields in request body' });
+      }
+
+      const newTransaction = await transactionService.addNewTransaction(record);
+      return res.status(201).json({
+        message: 'Transaction added successfully',
+        data: newTransaction
+      });
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  }
+
+  // async getLatestIncomeByAccount(req, res) {
+  //   try {
+  //     const { accountId } = req.body;
+  //     if (!accountId) return res.status(400).json({ message: 'accountId required' });
+  //     const income = await transactionService.getLatestIncome(accountId);
+  //     return res.status(200).json(income);
+  //   } catch (err) {
+  //     return res.status(400).json({ message: err.message });
+  //   }
+  // }
 }
 
-module.exports = new transactionController();
+module.exports = new TransactionController();
