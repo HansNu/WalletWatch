@@ -26,7 +26,25 @@ class AccountService {
     const { data, error } = await supabase
       .from('money_account')
       .select('balance')
-      .eq('user_id', userId);
+      .eq('user_id', userId).neq('account_category', "Credit");
+
+    if (error) {
+      throw new Error(error.message || 'Failed to fetch balances');
+    }
+
+    const total = data.reduce((sum, acc) => sum + (acc.balance || 0), 0);
+    return total;
+  }
+
+  async getLiabilitiesByUserId(userId) {
+    if (!userId) {
+      throw new Error('userId is required');
+    }
+
+    const { data, error } = await supabase
+      .from('money_account')
+      .select('balance')
+      .eq('user_id', userId).eq('account_category', "Credit");
 
     if (error) {
       throw new Error(error.message || 'Failed to fetch balances');

@@ -30,6 +30,20 @@ class AccountController {
     }
   }
 
+  async getLiabilitiesByUserId(req, res) {
+    try {
+      const { userId } = req.body;
+      if (!userId) {
+        return res.status(400).json({ message: 'userId is required' });
+      }
+
+      const liabilities = await accountService.getLiabilitiesByUserId(userId);
+      return res.status(200).json({ liabilities });
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  }
+
   async updateIncomeByAccountId(req, res) {
     try {
       const { accountId } = req.body;

@@ -5,6 +5,8 @@ const accountController = require('../controllers/accountController');
 
 //get
 router.post(baseurl + '/getTotalBalanceByUserId', accountController.getTotalBalanceByUserId);
+router.post(baseurl + '/getLiabilitiesByUserId', accountController.getLiabilitiesByUserId);
+
 router.post(baseurl + '/getAccountByUserId', accountController.getAccountByUserId);
 
 //update

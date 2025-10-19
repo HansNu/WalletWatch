@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { urlconstant } from '../../constants/urlConstant';
 import { format, parseISO } from 'date-fns';
-
+import { routes } from '../../constants/navigationRoutes';
+import { NavLink } from 'react-router-dom';
 
 function WalletDashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -14,6 +15,8 @@ function WalletDashboard() {
   const [expense, setExpense] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const [liabilities, setLiabilities] = useState(0);
   const [formData, setFormData] = useState({
     transactionName: '',
     transactionAmount: '',
@@ -43,8 +46,14 @@ function WalletDashboard() {
         transactionType: 'Expense'
       }
 
-      const totalBalance = await axios.post(urlconstant.getTotalBalanceByUserId, { userId: user.id });
-      setTotalBalance(totalBalance.data.totalBalance);
+      const realBalance = await axios.post(urlconstant.getTotalBalanceByUserId, { userId: user.id });
+      setBalance(realBalance.data.totalBalance);
+
+      const realLiabilities = await axios.post(urlconstant.getLiabilitiesByUserId, { userId: user.id });
+      setLiabilities(realLiabilities.data.liabilities);
+
+      const total = realBalance.data.totalBalance - realLiabilities.data.liabilities;
+      setTotalBalance(total);
 
       const incomeAmt = await axios.post(urlconstant.getIncomeExpenseByUserIdAndTransactionType, reqIncome);
       setIncome(incomeAmt.data.total);
@@ -58,8 +67,6 @@ function WalletDashboard() {
     }
     catch (err) {
       console.error('Error:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -74,19 +81,23 @@ function WalletDashboard() {
   };
 
   function convertKeysToCamel(obj) {
-  if (typeof obj !== 'object' || obj === null) return obj;
+    if (typeof obj !== 'object' || obj === null) return obj;
 
-  if (Array.isArray(obj)) {
-    return obj.map(convertKeysToCamel);
+    if (Array.isArray(obj)) {
+      return obj.map(convertKeysToCamel);
+    }
+
+    const newObj = {};
+    for (const key in obj) {
+      const camelKey = key.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+      newObj[camelKey] = convertKeysToCamel(obj[key]);
+    }
+    return newObj;
   }
 
-  const newObj = {};
-  for (const key in obj) {
-    const camelKey = key.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
-    newObj[camelKey] = convertKeysToCamel(obj[key]);
-  }
-  return newObj;
-}
+  const navLinkClass = ({ isActive }) =>
+    `flex flex-col items-center px-2 py-1 rounded transition-colors ${isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
+    }`;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +109,7 @@ function WalletDashboard() {
 
   const updateTransaction = async (e) => {
     e.preventDefault();
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -121,15 +132,15 @@ function WalletDashboard() {
         accountId: '',
       });
 
-      
+
       // Close modal
       setShowModal(false);
-      
+
       const accountId = {
-        accountId : formData.accountId
+        accountId: formData.accountId
       }
 
-      if(formData.transactionType == 'Income'){
+      if (formData.transactionType == 'Income') {
         await axios.post(urlconstant.updateIncomeByAccountId, accountId);
       }
 
@@ -139,11 +150,6 @@ function WalletDashboard() {
       alert('Failed to add transaction');
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
 
   return (
     <div className="min-h-screen bg-gray-800">
@@ -184,33 +190,33 @@ function WalletDashboard() {
             </div>
 
             <div className="h-[420px]">
-                {transactions.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-gray-400 text-xl">
-                    <p>No Transactions Yet</p>
-                  </div>
-                ) : (
-                  transactions.slice(0, 5).map((transaction) => (
-                    <div key={transaction.id} className="bg-white rounded-xl p-4 flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <p className={`font-semibold text-sm ${transaction.transactionType === 'Expense' ? 'text-red-600' : 'text-blue-600'}`}>
-                              Transaksi di {transaction.transactionName}
-                            </p>
-                            <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">{transaction.transactionCategory}</span>
-                          </div>
-                         <p className="text-xs text-gray-500 mt-1">{formatISODate(transaction.createdDt)}</p>
-                        </div>
-                      <p className={`text-lg font-bold ${transaction.transactionType === 'Expense' ? 'text-red-600' : 'text-blue-600'}`}>
-                        {(transaction.transactionAmount).toLocaleString('in')}
-                      </p>
+              {transactions.length === 0 ? (
+                <div className="flex items-center justify-center h-full text-gray-400 text-xl">
+                  <p>No Transactions Yet</p>
+                </div>
+              ) : (
+                transactions.slice(0, 5).map((transaction) => (
+                  <div key={transaction.id} className="bg-white rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <p className={`font-semibold text-sm ${transaction.transactionType === 'Expense' ? 'text-red-600' : 'text-blue-600'}`}>
+                          Transaksi di {transaction.transactionName}
+                        </p>
+                        <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">{transaction.transactionCategory}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">{formatISODate(transaction.createdDt)}</p>
                     </div>
-                  ))
-                )}
+                    <p className={`text-lg font-bold ${transaction.transactionType === 'Expense' ? 'text-red-600' : 'text-blue-600'}`}>
+                      {(transaction.transactionAmount).toLocaleString('in')}
+                    </p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
 
-        <button 
+        <button
           onClick={() => setShowModal(true)}
           className="fixed bottom-24 right-6 w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-300 transition-colors"
         >
@@ -223,7 +229,7 @@ function WalletDashboard() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-md p-6 relative">
-            <button 
+            <button
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
             >
@@ -316,17 +322,17 @@ function WalletDashboard() {
       <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
         <div className="max-w-md mx-auto flex justify-around items-center py-6">
 
-          <button className="flex flex-col items-center">
+          <NavLink to={routes.walletDashboard} className={navLinkClass}>
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
             </svg>
-          </button>
+          </NavLink>
 
-          <button className="flex flex-col items-center">
+          <NavLink to={routes.userWallet} className={navLinkClass}>
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14c1.1 0 2 .9 2 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
             </svg>
-          </button>
+          </NavLink>
 
           <button className="flex flex-col items-center">
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

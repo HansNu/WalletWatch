@@ -7,6 +7,7 @@ export const urlconstant = {
 
   //account
   getTotalBalanceByUserId : `${baseUrl}account/getTotalBalanceByUserId`,
+  getLiabilitiesByUserId : `${baseUrl}account/getLiabilitiesByUserId`,
   updateIncomeByAccountId : `${baseUrl}account/updateIncomeByAccountId`,
 
 
