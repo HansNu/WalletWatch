@@ -80,6 +80,56 @@ class AccountService {
 
     return data[0];
   }
+
+  async deleteAccountByAccountId(accountId) {
+    if (!accountId) {
+      throw new Error('userId is required');
+    }
+
+    const { error } = await supabase
+      .from('money_account')
+      .delete()
+      .eq('account_id', accountId);
+
+    if (error) {
+      return {
+        message: `Failed to delete Account`,
+        error: error
+      };
+    }
+
+    return {
+      message: `Account deleted successfully`
+    };
+  }
+
+  async addNewAccount(accData) {
+    if(!accData){
+      return {message : `Invalid Data`};
+    }
+    const { data, error } = await supabase
+      .from('money_account')
+      .insert([
+        { 
+          account_name: accData.accountName, 
+          account_category: accData.accountCategory,
+          balance: accData.balance,
+          user_id: accData.userId
+        },
+      ])
+      .select();
+
+      if(error){
+        return {
+          message : error
+        }
+      }
+
+      return {
+        message : `Account Added Successfully`,
+        account : data
+      }
+  }
 }
 
 module.exports = new AccountService();

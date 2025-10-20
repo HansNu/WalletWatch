@@ -62,6 +62,35 @@ class AccountController {
       return res.status(400).json({ message: err.message });
     }
   }
+
+  async deleteAccountByAccountId(req, res) {
+    try {
+      const { accountId } = req.body;
+      if (!accountId) {
+        return res.status(400).json({ message: 'accountId is required' });
+      }
+
+      const account = await accountService.deleteAccountByAccountId(accountId);
+      return res.status(200).json({ account });
+    } catch (err) {
+      return res.status(400).json({ message: err });
+    }
+  }
+
+  async addNewAccount (req, res) {
+    try {
+      const reqAccData = req.body;
+      if (!reqAccData) {
+        return res.status(400).json({ message: 'Invalid Request' });
+      }
+
+      const account = await accountService.addNewAccount(reqAccData);
+      return res.status(200).json({ account });
+    } catch (err) {
+      return res.status(400).json({ message: err });
+    }
+  }
+
 }
 
 module.exports = new AccountController();
