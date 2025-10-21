@@ -71,7 +71,7 @@ class AccountService {
     const { data, error } = await supabase
       .from('money_account')
       .update({ balance: newBalance })
-      .eq('id', accountId) // ⚠️ Make sure this matches your PK (is it 'id' or 'account_id'?)
+      .eq('id', accountId)
       .select();
 
     if (error) {
@@ -130,6 +130,35 @@ class AccountService {
         account : data
       }
   }
+
+  async updateAccount(accData) {
+    if(!accData){
+      return {message : `Invalid Data`};
+    }
+    const { data, error } = await supabase
+      .from('money_account')
+      .update([
+        { 
+          account_name: accData.accountName, 
+          account_category: accData.accountCategory,
+          balance: accData.balance
+        },
+      ])
+      .select().eq('account_id', accData.accountId);
+
+      if(error){
+        return {
+          message : error
+        }
+      }
+
+      return {
+        message : `Account Updated Successfully`,
+        account : data
+      }
+  }
+
+
 }
 
 module.exports = new AccountService();

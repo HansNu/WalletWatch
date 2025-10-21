@@ -12,7 +12,8 @@ export const urlconstant = {
   getAccountByUserId : `${baseUrl}account/getAccountByUserId`,
   deleteAccountByAccountId : `${baseUrl}account/deleteAccountByAccountId`,
   addNewAccount : `${baseUrl}account/addNewAccount`,
-
+  updateAccount : `${baseUrl}account/updateAccount`,
+  
 
   //transaction
   getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,

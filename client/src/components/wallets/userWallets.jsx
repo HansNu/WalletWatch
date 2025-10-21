@@ -39,6 +39,8 @@ function userWallets() {
   const [showModal, setShowModal] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingAccount, setEditingAccount] = useState(null);
 
   const fetchAll = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -71,23 +73,30 @@ function userWallets() {
     }));
   };
 
-  const addNewAcc = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId) return;
 
     const accountData = { ...formAccounts, userId };
-    const res = await axios.post(urlconstant.addNewAccount, accountData);
-    setShowModal(false);
 
-    if (res.data.account.account) {
-      toast.success(res.data.account.message);
-      setAccounts(prev => prev.filter(acc => acc.account_id !== acc.Id));
-      fetchAll();
-    } else {
-      toast.error(res.data.account.message);
+    try {
+      let res;
+      if (isEditing && editingAccount) {
+        res = await axios.post(urlconstant.updateAccount, {
+          accountId: editingAccount.account_id,
+          ...accountData
+        });
+      } else {
+        res = await axios.post(urlconstant.addNewAccount, accountData);
+      }
+
+      setShowModal(false);
+      toast.success(res.data.message || (isEditing ? 'Account updated!' : 'Account added!'));
+      fetchAll(); // refresh the list
+    } catch (error) {
+      console.error(error);
+      toast.error(isEditing ? 'Failed to update account' : 'Failed to add account');
     }
-    
-    setFormData({ accountName: '', accountBalance: 0, accountCategory: '' });
   };
 
   const deleteAccount = async (accId, onSuccess) => {
@@ -105,6 +114,15 @@ function userWallets() {
 
     fetchAll();
   };
+
+  const updateAccount = async () => {
+    setFormAccounts({
+      accountName: '',
+      balance: 0,
+      accountCategory: '',
+      userId: ''
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-800">
@@ -158,20 +176,28 @@ function userWallets() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button className="p-2 hover:bg-gray-300 rounded-2xl transition-colors">
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                      setEditingAccount(account);
+                      setFormAccounts({
+                        accountName: account.account_name,
+                        balance: account.balance,
+                        accountCategory: account.account_category,
+                        userId: userId,
+                        accountId: account.account_id
+                      });
+                      setShowModal(true);
+                    }}
+                  >
                     <Edit2 className="w-5 h-5 text-gray-700" />
                   </button>
+
                   <button
                     onClick={() => deleteAccount(account.account_id)}
                     className="p-2 hover:bg-gray-300 rounded-2xl transition-colors"
                   >
                     <Trash2 className="w-5 h-5 text-gray-700" />
-                  </button>
-                  <button
-                    onClick={() => setShowMenu(showMenu === account.id ? null : account.id)}
-                    className="p-2 hover:bg-gray-300 rounded-2xl transition-colors"
-                  >
-                    <MoreVertical className="w-5 h-5 text-gray-700" />
                   </button>
                 </div>
               </div>
@@ -179,7 +205,11 @@ function userWallets() {
           ))}
 
           {/* Add New Account Button */}
-          <button onClick={() => setShowModal(true)} className=" w-full bg-gray-200 rounded-2xl p-4 flex items-center justify-center gap-2 text-gray-900 font-medium hover:bg-gray-300 transition-colors">
+          <button onClick={() => {
+            setShowModal(true);
+            setEditingAccount(null);
+            setIsEditing(false);
+          }} className=" w-full bg-gray-200 rounded-2xl p-4 flex items-center justify-center gap-2 text-gray-900 font-medium hover:bg-gray-300 transition-colors">
             <Plus className="w-5 h-5" />
             Add New Accounts
           </button>
@@ -196,14 +226,17 @@ function userWallets() {
               <X className="w-6 h-6" />
             </button>
 
-            <h2 className="text-xl font-bold mb-6">Add New Account</h2>
+            <h2 className="text-xl font-bold mb-6">
+              {isEditing ? 'Edit Account' : 'Add New Account'}
+            </h2>
 
-            <form onSubmit={addNewAcc} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <input
                   type="text"
                   name="accountName"
+                  value={formAccounts.accountName}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
@@ -216,6 +249,7 @@ function userWallets() {
                   type="number"
                   name="balance"
                   onChange={handleInputChange}
+                  value={formAccounts.balance}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -225,6 +259,7 @@ function userWallets() {
                 <label className="block text-sm font-medium mb-1">Category</label>
                 <select
                   name="accountCategory"
+                  value={formAccounts.accountCategory}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >

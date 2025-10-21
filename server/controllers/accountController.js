@@ -91,6 +91,20 @@ class AccountController {
     }
   }
 
+  async updateAccount (req, res) {
+    try {
+      const reqAccData = req.body;
+      if (!reqAccData) {
+        return res.status(400).json({ message: 'Invalid Request' });
+      }
+
+      const account = await accountService.updateAccount(reqAccData);
+      return res.status(200).json({ account });
+    } catch (err) {
+      return res.status(400).json({ message: err });
+    }
+  }
+
 }
 
 module.exports = new AccountController();

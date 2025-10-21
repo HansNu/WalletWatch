@@ -12,5 +12,6 @@ router.post(baseurl + '/getAccountByUserId', accountController.getAccountByUserI
 router.post(baseurl + '/updateIncomeByAccountId', accountController.updateIncomeByAccountId);
 router.post(baseurl + '/deleteAccountByAccountId', accountController.deleteAccountByAccountId);
 router.post(baseurl + '/addNewAccount', accountController.addNewAccount);
+router.post(baseurl + '/updateAccount', accountController.updateAccount);
 
 module.exports = router;
