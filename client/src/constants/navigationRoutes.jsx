@@ -1,5 +1,7 @@
 export const routes = {
     walletDashboard : '/dashboard',
     login : '/login',
-    userWallet : '/wallet'
+    userWallet : '/wallet',
+    transactionBudget : '/transactionBudget',
+    addEditBudget : `/transactionBudget/addEditBudget`
 }

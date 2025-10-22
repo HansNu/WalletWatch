@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Edit2, Trash2, MoreVertical, Plus, CreditCard, Wallet, TrendingUp, DollarSign } from 'lucide-react';
+import { Edit2, Trash2, Plus, CreditCard, TrendingUp, DollarSign, User, Wallet, List, LayoutGrid } from 'lucide-react';
 import { routes } from '../../constants/navigationRoutes';
 import { NavLink } from 'react-router-dom';
 import { urlconstant } from '../../constants/urlConstant';
@@ -294,34 +294,33 @@ function userWallets() {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
-        <div className="max-w-md mx-auto flex justify-around items-center py-6">
-
-          <NavLink to={routes.walletDashboard} className={navLinkClass}>
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-            </svg>
-          </NavLink>
-
-          <NavLink to={routes.userWallet} className={navLinkClass}>
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14c1.1 0 2 .9 2 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-            </svg>
-          </NavLink>
-
-          <button className="flex flex-col items-center">
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
-            </svg>
-          </button>
-
-
-          <button className="flex flex-col items-center">
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg>
-          </button>
-        </div>
-      </div>
+              <div className="max-w-md mx-auto flex justify-around items-center py-6">
+      
+                <NavLink to={routes.walletDashboard} className={navLinkClass}>
+                  <button className="flex flex-col items-center text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                    <LayoutGrid className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" />
+                  </button>
+                </NavLink>
+      
+                <NavLink to={routes.userWallet} className={navLinkClass}>
+                  <button className="flex flex-col items-center text-gray-500">
+                    <Wallet className="w-6 h-6" />
+                  </button>
+                </NavLink>
+      
+                <NavLink to={routes.transactionBudget} className={navLinkClass}>
+                  <button className="flex flex-col items-center text-gray-600">
+                    <List className="w-6 h-6" />
+                  </button>
+                </NavLink>
+      
+                <NavLink to={''} className={navLinkClass}>
+                  <button className="flex flex-col items-center text-gray-500">
+                    <User className="w-6 h-6" />
+                  </button>
+                </NavLink>
+              </div>
+            </div>
       <ToastContainer />
     </div>
   );
