@@ -19,5 +19,13 @@ export const urlconstant = {
   getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,
   getLatestTransactionRecord : `${baseUrl}transaction/getLatestTransactionRecord`,
   addNewTransaction : `${baseUrl}transaction/addNewTransaction`,
+  getTransactionBasedOnUserIdAndDateRange : `${baseUrl}transaction/getTransactionBasedOnUserIdAndDateRange`,
 
+  //budget
+  getBudgetByBudgetId : `${baseUrl}budget/getBudgetByBudgetId`,
+  getBudgetByUserId : `${baseUrl}budget/getBudgetByUserId`,
+  addNewBudget: `${baseUrl}budget/addNewBudget`,
+
+  //category
+  getTransactionCategoryByBudgetId : `${baseUrl}category/getTransactionCategoryByBudgetId`
 }

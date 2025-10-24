@@ -36,6 +36,14 @@ class TransactionController {
     }
   }
 
+  async getTransactionBasedOnUserIdAndDateRange(req, res){
+    const reqObj = req.body;
+
+    const total = await transactionService.getTransactionBasedOnUserIdAndDateRange(reqObj);
+
+    return res.status(200).json(total);
+  }
+
   async addNewTransaction(req, res) {
     try {
       const record = req.body;
@@ -53,6 +61,7 @@ class TransactionController {
       return res.status(400).json({ message: err.message });
     }
   }
+  
 
   // async getLatestIncomeByAccount(req, res) {
   //   try {

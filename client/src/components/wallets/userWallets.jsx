@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Edit2, Trash2, Plus, CreditCard, TrendingUp, DollarSign, User, Wallet, List, LayoutGrid } from 'lucide-react';
 import { routes } from '../../constants/navigationRoutes';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { urlconstant } from '../../constants/urlConstant';
 import axios from 'axios';
 import { supabase } from '../../supabaseClient';

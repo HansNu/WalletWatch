@@ -1,5 +1,6 @@
 // service/transactionService.js
 const supabase = require('./supabaseClient');
+const budgetService = require('./budgetService');
 
 class TransactionService {
   async getIncomeExpenseByUserIdAndTransactionType(userId, transactionType) {
@@ -37,6 +38,55 @@ class TransactionService {
     }
 
     return data;
+  }
+
+  async getLatestIncome(accountId) {
+    if (!accountId) {
+      throw new Error('accountId is required');
+    }
+
+    const { data, error } = await supabase
+      .from('transaction_history')
+      .select('transaction_amount, user_id')
+      .eq('transaction_type', 'Income')
+      .eq('account_id', accountId)
+      .order('created_dt', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error) {
+      // If no row found, Supabase returns error with code 'PGRST116'
+      if (error.code === 'PGRST116') {
+        return null; // No income found
+      }
+      throw new Error(error.message || 'Failed to fetch latest income');
+    }
+
+    return data;
+  }
+
+  async getTransactionBasedOnUserIdAndDateRange(reqObj) {
+    if (!reqObj) {
+      throw new Error('reqObj is required');
+    }
+
+    const budgetData = await budgetService.getBudgetByUserId(reqObj.userId);
+    
+    const { data, error } = await supabase
+      .from('transaction_history')
+      .select('*')
+      .eq('user_id', reqObj.userId)
+      .gte('created_dt', budgetData.start_dt)
+      .lte('created_dt', budgetData.end_dt);
+
+    if (error) return { message: error };
+
+    let total = 0;
+    for (let i = 0; i<data.length; i++) {
+      total += data[i].transaction_amount
+    }
+
+    return total;
   }
 
   async addNewTransaction(transactionData) {
@@ -80,30 +130,6 @@ class TransactionService {
     return data[0];
   }
 
-  async getLatestIncome(accountId) {
-    if (!accountId) {
-      throw new Error('accountId is required');
-    }
-
-    const { data, error } = await supabase
-      .from('transaction_history')
-      .select('transaction_amount, user_id')
-      .eq('transaction_type', 'Income')
-      .eq('account_id', accountId)
-      .order('created_dt', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (error) {
-      // If no row found, Supabase returns error with code 'PGRST116'
-      if (error.code === 'PGRST116') {
-        return null; // No income found
-      }
-      throw new Error(error.message || 'Failed to fetch latest income');
-    }
-
-    return data;
-  }
 }
 
 module.exports = new TransactionService();

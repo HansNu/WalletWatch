@@ -5,6 +5,8 @@ const supabase = require('./service/supabaseClient');
 const userRoutes = require('./routes/userRoutes');
 const accountRoutes = require('./routes/accountRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const budgetRoutes = require('./routes/budgetRoutes');
+const categoryRoutes = require('./routes/tranCategoryRoutes');
 
 dotenv.config();
 
@@ -22,6 +24,8 @@ app.get(baseUrl + '/message', (req, res) => {
 app.use(baseUrl, userRoutes);   
 app.use(baseUrl, accountRoutes);
 app.use(baseUrl, transactionRoutes);
+app.use(baseUrl, budgetRoutes);
+app.use(baseUrl, categoryRoutes);
 
 app.listen(port, () =>{
     console.log(`Server is running on http://localhost:${port}`);

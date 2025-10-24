@@ -1,17 +1,16 @@
 const { options } = require('../routes/userRoutes');
 const supabase = require('../service/supabaseClient');
 
-class userService {
-    async getUserByUserId(userId) {
-        if (!userId) {
-            throw new Error('userId is required');
+class categoryService {
+    async getTransactionCategoryByBudgetId(budgetid) {
+        if (!budgetid) {
+            throw new Error('budgetid is required');
         }
 
         const { data, error } = await supabase
-            .from('users')
+            .from('transaction_category')
             .select('*')
-            .eq('user_id', userId)
-            .single();
+            .eq('budget_id', budgetid)
 
         if (error) {
             if (error.code === 'PGRST116') {
@@ -24,4 +23,4 @@ class userService {
     }
 }
 
-module.exports = new userService();
+module.exports = new categoryService();
