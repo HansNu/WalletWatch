@@ -192,7 +192,7 @@ function WalletDashboard() {
                 </div>
               ) : (
                 transactions.slice(0, 5).map((transaction) => (
-                  <div key={transaction.id} className="bg-white rounded-xl p-4 flex items-center justify-between">
+                  <div key={transaction.id} className="bg-gray-100 rounded-xl p-4 mt-3 flex items-center justify-between">
                     <div>
                       <div className="flex items-center space-x-2">
                         <p className={`font-semibold text-sm ${transaction.transactionType === 'Expense' ? 'text-red-600' : 'text-blue-600'}`}>

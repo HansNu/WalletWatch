@@ -1,21 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { routes } from '../../constants/navigationRoutes';
 import { urlconstant } from '../../constants/urlConstant';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import { supabase } from '../../supabaseClient'; // Adjust import path as needed
+import { supabase } from '../../supabaseClient';
 
 function EditBudgetView() {
-    const [budget, setBudget] = useState({
-        amount: 0,
-        period: 'weekly',
-        startDate: '',
-        endDate: ''
-    });
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    function formatDt(isoString) {
+        if (!isoString) return '';
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return '';
+        return d.toISOString().split('T')[0];
+    }
+
+    const startDt = formatDt(location.state.budget.startDate);
+    const endDt = formatDt(location.state.budget.endDate);
+
+    const [budget, setBudget] = useState(
+        location.state.budget ?
+            {
+                ...location.state.budget,
+                startDate: startDt,
+                endDate: endDt
+            }
+            :
+            {
+                amount: 0,
+                period: 'weekly',
+                startDate: '',
+                endDate: ''
+            }
+    );
 
     const fetchAll = async () => {
         const { data: { user } } = await supabase.auth.getUser();
@@ -26,7 +47,6 @@ function EditBudgetView() {
         fetchAll();
     }, []);
 
-    // Calculate dates based on period selection
     const calculateDates = (period, startDate) => {
         const start = startDate ? new Date(startDate) : new Date();
         let end = new Date(start);
@@ -54,7 +74,6 @@ function EditBudgetView() {
         };
     };
 
-    // Handle period change and auto-calculate dates
     const handlePeriodChange = (newPeriod) => {
         const dates = calculateDates(newPeriod, budget.startDate || new Date());
         setBudget({
@@ -65,7 +84,6 @@ function EditBudgetView() {
         });
     };
 
-    // Handle start date change and recalculate end date
     const handleStartDateChange = (newStartDate) => {
         const dates = calculateDates(budget.period, newStartDate);
         setBudget({
@@ -78,7 +96,6 @@ function EditBudgetView() {
     const addUpdateBudget = async (e) => {
         e.preventDefault();
         const userId = user.id
-        // Validation
         if (!userId) {
             toast.error('User not authenticated');
             return;
@@ -102,7 +119,6 @@ function EditBudgetView() {
         setIsLoading(true);
 
         try {
-            // Prepare request body to match API format
             const budgetReq = {
                 amount: parseFloat(budget.amount),
                 period: budget.period.toLowerCase(),
@@ -115,7 +131,6 @@ function EditBudgetView() {
 
             toast.success(response.data.message || 'Budget created successfully');
 
-            // Navigate after short delay to show toast
             setTimeout(() => {
                 navigate(routes.transactionBudget);
             }, 1500);

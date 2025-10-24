@@ -27,5 +27,9 @@ export const urlconstant = {
   addNewBudget: `${baseUrl}budget/addNewBudget`,
 
   //category
-  getTransactionCategoryByBudgetId : `${baseUrl}category/getTransactionCategoryByBudgetId`
+  getTransactionCategoryByBudgetId : `${baseUrl}category/getTransactionCategoryByBudgetId`,
+  addTransactionCategory : `${baseUrl}category/addNewTransactionCategory`,
+  updateTransactionCategory : `${baseUrl}category/updateTransactionCategory`,
+  deleteTransactionCategory : `${baseUrl}category/deleteTransactionCategory`,
+  
 }
