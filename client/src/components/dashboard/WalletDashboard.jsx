@@ -17,6 +17,7 @@ function WalletDashboard() {
   const [showModal, setShowModal] = useState(false);
   const [balance, setBalance] = useState(0);
   const [liabilities, setLiabilities] = useState(0);
+  const [listAccount, setListAccount] = useState([]);
   const [formData, setFormData] = useState({
     transactionName: '',
     transactionAmount: '',
@@ -24,7 +25,7 @@ function WalletDashboard() {
     transactionCategory: '',
     accountId: '',
   });
-  const [dropAcc, setDropAcc] = useState();
+  const [listCategory, setListCategory] = useState([]);
 
 
   useEffect(() => {
@@ -63,7 +64,13 @@ function WalletDashboard() {
 
       const transactionRecord = await axios.post(urlconstant.getLatestTransactionRecord, { userId: user.id });
       setTransactions(convertKeysToCamel(transactionRecord.data));
-      console.log(transactionRecord.data);
+
+      const getBudget = await axios.post(urlconstant.getBudgetByUserId, { userId: user.id });
+      const getCategories = await axios.post(urlconstant.getTransactionCategoryByBudgetId, { budgetId: getBudget.data.budget_id });
+      setListCategory(getCategories.data);
+
+      const getAccount = await axios.post(urlconstant.getAccountByUserId, { userId: user.id });
+      setListAccount(getAccount.data);
     }
     catch (err) {
       console.error('Error:', err);
@@ -101,10 +108,31 @@ function WalletDashboard() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === 'transactionType') {
+      if (value === 'Income') {
+        // Force category to "Income" and ignore the list
+        setFormData((prev) => ({
+          ...prev,
+          transactionType: value,
+          transactionCategory: 'Income',
+        }));
+      } else {
+        // For "Expense", reset to first category or empty (your choice)
+        const firstCategory = listCategory.length > 0 ? listCategory[0].category_name : '';
+        setFormData((prev) => ({
+          ...prev,
+          transactionType: value,
+          transactionCategory: firstCategory,
+        }));
+      }
+    } else if (name === 'transactionCategory') {
+      // Only allow manual change if type is Expense
+      setFormData((prev) => ({
+        ...prev,
+        transactionCategory: prev.transactionType === 'Expense' ? value : 'Income',
+      }));
+    }
   };
 
   const updateTransaction = async (e) => {
@@ -275,24 +303,45 @@ function WalletDashboard() {
 
               <div>
                 <label className="block text-sm font-medium mb-1">Category</label>
-                <input
-                  type="text"
-                  name="transactionCategory"
-                  value={formData.transactionCategory}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                {formData.transactionType === 'Income' ? (
+                  <input
+                    type="text"
+                    value="Income"
+                    readOnly
+                    className="w-full px-3 py-2 bg-gray-100 text-gray-500 border border-gray-300 rounded-lg cursor-not-allowed"
+                  />
+                ) : (
+                  <select
+                    name="transactionCategory"
+                    value={formData.transactionCategory}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  >
+                    {listCategory.map((cat, index) => (
+                      <option key={index} value={cat.category_name}>
+                        {cat.category_name}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">Account</label>
-                <input
-                  type="text"
+                <select
                   name="accountId"
                   value={formData.accountId}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  required
+                >
+                  {listAccount.map((cat, index) => (
+                    <option key={index} value={cat.account_name}>
+                      {cat.account_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex gap-3 pt-4">
