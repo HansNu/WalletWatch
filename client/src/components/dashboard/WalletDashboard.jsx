@@ -37,14 +37,20 @@ function WalletDashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      const getBudget = await axios.post(urlconstant.getBudgetByUserId, { userId: user.id });
+
       const reqIncome = {
         userId: user.id,
-        transactionType: 'Income'
+        transactionType: 'Income',
+        startDt: getBudget.data.start_dt,
+        endDt: getBudget.data.end_dt
       }
 
       const reqExpense = {
         userId: user.id,
-        transactionType: 'Expense'
+        transactionType: 'Expense',
+        startDt: getBudget.data.start_dt,
+        endDt: getBudget.data.end_dt
       }
 
       const realBalance = await axios.post(urlconstant.getTotalBalanceByUserId, { userId: user.id });
@@ -65,7 +71,6 @@ function WalletDashboard() {
       const transactionRecord = await axios.post(urlconstant.getLatestTransactionRecord, { userId: user.id });
       setTransactions(convertKeysToCamel(transactionRecord.data));
 
-      const getBudget = await axios.post(urlconstant.getBudgetByUserId, { userId: user.id });
       const getCategories = await axios.post(urlconstant.getTransactionCategoryByBudgetId, { budgetId: getBudget.data.budget_id });
       setListCategory(getCategories.data);
 
@@ -111,14 +116,12 @@ function WalletDashboard() {
 
     if (name === 'transactionType') {
       if (value === 'Income') {
-        // Force category to "Income" and ignore the list
         setFormData((prev) => ({
           ...prev,
           transactionType: value,
           transactionCategory: 'Income',
         }));
       } else {
-        // For "Expense", reset to first category or empty (your choice)
         const firstCategory = listCategory.length > 0 ? listCategory[0].category_name : '';
         setFormData((prev) => ({
           ...prev,
@@ -127,10 +130,15 @@ function WalletDashboard() {
         }));
       }
     } else if (name === 'transactionCategory') {
-      // Only allow manual change if type is Expense
       setFormData((prev) => ({
         ...prev,
         transactionCategory: prev.transactionType === 'Expense' ? value : 'Income',
+      }));
+    } else {
+      // Add this else block to handle all other fields
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
       }));
     }
   };
@@ -159,13 +167,15 @@ function WalletDashboard() {
       });
 
       setShowModal(false);
-
-      const accountId = {
-        accountId: formData.accountId
-      }
+      const reqAcc = {
+        accountId: formData.accountId,
+        transactionAmount:  formData.transactionAmount
+      };
 
       if (formData.transactionType == 'Income') {
-        await axios.post(urlconstant.updateIncomeByAccountId, accountId);
+        await axios.post(urlconstant.updateIncomeByAccountId, reqAcc);
+      } else {
+        await axios.post(urlconstant.updateExpenseByAccountId, reqAcc);
       }
 
       fetchData();
@@ -318,6 +328,7 @@ function WalletDashboard() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   >
+                    <option value="">Select a category</option>
                     {listCategory.map((cat, index) => (
                       <option key={index} value={cat.category_name}>
                         {cat.category_name}
@@ -336,8 +347,9 @@ function WalletDashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
+                  <option value="">Select an account</option>
                   {listAccount.map((cat, index) => (
-                    <option key={index} value={cat.account_name}>
+                    <option key={index} value={cat.account_id}>
                       {cat.account_name}
                     </option>
                   ))}

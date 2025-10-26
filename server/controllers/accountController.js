@@ -63,6 +63,20 @@ class AccountController {
     }
   }
 
+  async updateExpenseByAccountId(req, res) {
+    try {
+      const reqExp = req.body;
+      if (!reqExp) {
+        return res.status(400).json({ message: 'Invalid Request' });
+      }
+
+      const updatedAccount = await accountService.updateExpenseByAccountId(reqExp);
+      return res.status(200).json(updatedAccount);
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  }
+
   async deleteAccountByAccountId(req, res) {
     try {
       const { accountId } = req.body;

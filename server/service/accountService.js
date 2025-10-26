@@ -1,4 +1,5 @@
 const supabase = require('./supabaseClient');
+const transactionService = require('./transactionService');
 
 class AccountService {
   async getAccountByUserId(reqUser) {
@@ -59,7 +60,7 @@ class AccountService {
       throw new Error('accountId and latestIncome are required');
     }
 
-    const accounts = await this.getAccountByUserId(latestIncome.user_id);
+    const accounts = await this.getAccountByUserId(convertKeysToCamel(latestIncome));
     const account = accounts.find(acc => acc.id === accountId) || accounts[0];
 
     if (!account) {
@@ -71,7 +72,35 @@ class AccountService {
     const { data, error } = await supabase
       .from('money_account')
       .update({ balance: newBalance })
-      .eq('id', accountId)
+      .eq('account_id', accountId)
+      .select();
+
+    if (error) {
+      throw new Error(error.message || 'Failed to update balance');
+    }
+
+    return data[0];
+  }
+
+  async updateExpenseByAccountId(reqExp) {
+    if (!reqExp) {
+      throw new Error('accountId and latestIncome are required');
+    }
+
+    const { data:getAcc, error:errAcc } = await supabase
+      .from('money_account').select('balance')
+      .eq('account_id', reqExp.accountId);
+
+    if (!getAcc) {
+      throw new Error('Account not found');
+    }
+
+    const newBalance = getAcc[0].balance - reqExp.transactionAmount;
+
+    const { data, error } = await supabase
+      .from('money_account')
+      .update({ balance: newBalance })
+      .eq('account_id', reqExp.accountId)
       .select();
 
     if (error) {
@@ -125,6 +154,17 @@ class AccountService {
         }
       }
 
+      if(accData.accountCategory != 'Credit'){
+        await transactionService.addNewTransaction({
+          transactionAmount : accData.balance,
+          transactionType : 'Income',
+          transactionCategory : 'Income',
+          accountId : data[0].account_id,
+          userId : accData.userId,
+          transactionName : accData.accountName
+        })
+      }
+
       return {
         message : `Account Added Successfully`,
         account : data
@@ -135,6 +175,12 @@ class AccountService {
     if(!accData){
       return {message : `Invalid Data`};
     }
+    
+    const { data:getUser, error: errorUser } = await supabase
+      .from('money_account')
+      .select('*')
+      .eq('account_id', accData.accountId);
+
     const { data, error } = await supabase
       .from('money_account')
       .update([
@@ -152,6 +198,18 @@ class AccountService {
         }
       }
 
+      const newBalance = Math.abs(getUser[0].balance - accData.balance)
+      if(accData.accountCategory != 'Credit'){
+        await transactionService.addNewTransaction({
+          transactionAmount : newBalance,
+          transactionType : 'Income',
+          transactionCategory : 'Income',
+          accountId : accData.accountId,
+          userId : getUser[0].user_id,
+          transactionName : accData.accountName
+        })
+      }
+
       return {
         message : `Account Updated Successfully`,
         account : data
@@ -160,5 +218,20 @@ class AccountService {
 
 
 }
+
+function convertKeysToCamel(obj) {
+    if (typeof obj !== 'object' || obj === null) return obj;
+
+    if (Array.isArray(obj)) {
+      return obj.map(convertKeysToCamel);
+    }
+
+    const newObj = {};
+    for (const key in obj) {
+      const camelKey = key.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+      newObj[camelKey] = convertKeysToCamel(obj[key]);
+    }
+    return newObj;
+  }
 
 module.exports = new AccountService();

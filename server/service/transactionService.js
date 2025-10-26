@@ -3,16 +3,15 @@ const supabase = require('./supabaseClient');
 const budgetService = require('./budgetService');
 
 class TransactionService {
-  async getIncomeExpenseByUserIdAndTransactionType(userId, transactionType) {
-    if (!userId || !transactionType) {
-      throw new Error('userId and transactionType are required');
-    }
+  async getIncomeExpenseByUserIdAndTransactionType(reqInEx) {
 
     const { data, error } = await supabase
       .from('transaction_history')
       .select('transaction_amount')
-      .eq('user_id', userId)
-      .eq('transaction_type', transactionType);
+      .eq('user_id', reqInEx.userId)
+      .eq('transaction_type', reqInEx.transactionType)
+      .gte('created_dt', reqInEx.startDt)
+      .lte('created_dt', reqInEx.endDt);;
 
     if (error) {
       throw new Error(error.message || 'Failed to fetch transactions');
@@ -71,18 +70,18 @@ class TransactionService {
     }
 
     const budgetData = await budgetService.getBudgetByUserId(reqObj.userId);
-    
+
     const { data, error } = await supabase
       .from('transaction_history')
       .select('*')
-      .eq('user_id', reqObj.userId)
+      .eq('user_id', reqObj.userId).neq('transaction_type', 'Income')
       .gte('created_dt', budgetData.start_dt)
       .lte('created_dt', budgetData.end_dt);
 
     if (error) return { message: error };
 
     let total = 0;
-    for (let i = 0; i<data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       total += data[i].transaction_amount
     }
 

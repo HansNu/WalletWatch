@@ -31,7 +31,7 @@ class categoryService {
             .from('transaction_category')
             .insert({
                 category_name: catObj.categoryName,
-                budget_allocation: catObj.budget_allocation,
+                budget_allocation: catObj.budgetAllocation,
                 budget_id: catObj.budgetId
             })
             .select('*');

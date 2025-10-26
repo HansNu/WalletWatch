@@ -99,7 +99,7 @@ function userWallets() {
 
       setShowModal(false);
       toast.success(res.data.message || (isEditing ? 'Account updated!' : 'Account added!'));
-      fetchAll(); // refresh the list
+      fetchAll();
     } catch (error) {
       console.error(error);
       toast.error(isEditing ? 'Failed to update account' : 'Failed to add account');

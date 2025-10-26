@@ -147,7 +147,6 @@ const BudgetApp = () => {
                 categoryId: categoryId
             });
             if (res.data.message === 'Category deleted successfully') {
-                toast.success(res.data.message);
             } else {
                 toast.error(res.data.message);
             }

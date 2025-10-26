@@ -4,16 +4,13 @@ const transactionService = require('../service/transactionService');
 class TransactionController {
   async getIncomeExpenseByUserIdAndTransactionType(req, res) {
     try {
-      const { userId, transactionType } = req.body;
+      const reqInEx= req.body;
 
-      if (!userId || !transactionType) {
-        return res.status(400).json({ message: 'userId and transactionType are required' });
+      if (!reqInEx) {
+        return res.status(400).json({ message: 'Invalid request' });
       }
 
-      const total = await transactionService.getIncomeExpenseByUserIdAndTransactionType(
-        userId,
-        transactionType
-      );
+      const total = await transactionService.getIncomeExpenseByUserIdAndTransactionType(reqInEx);
 
       return res.status(200).json({ total });
     } catch (err) {
