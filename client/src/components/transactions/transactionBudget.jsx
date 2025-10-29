@@ -19,7 +19,8 @@ const BudgetApp = () => {
         startDate: '',
         endDate: '',
         daysLeft: 0,
-        budgetId: ''
+        budgetId: '',
+        userId: ''
     });
     const [categories, setCategories] = useState([]);
     const [userId, setUserId] = useState(null);
@@ -60,7 +61,8 @@ const BudgetApp = () => {
             startDate: getBudget.data.start_dt,
             endDate: getBudget.data.end_dt,
             daysLeft: daysLeft,
-            budgetId: getBudget.data.budget_id
+            budgetId: getBudget.data.budget_id,
+            userId: user.id
         });
 
         const getCategories = await axios.post(urlconstant.getTransactionCategoryByBudgetId, { budgetId: getBudget.data.budget_id });

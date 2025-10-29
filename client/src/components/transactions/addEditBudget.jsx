@@ -95,7 +95,7 @@ function EditBudgetView() {
 
     const addUpdateBudget = async (e) => {
         e.preventDefault();
-        const userId = user.id
+        const userId = location.state.budget.userId;
         if (!userId) {
             toast.error('User not authenticated');
             return;

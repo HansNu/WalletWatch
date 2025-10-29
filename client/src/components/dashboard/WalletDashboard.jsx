@@ -7,6 +7,8 @@ import { urlconstant } from '../../constants/urlConstant';
 import { format, parseISO } from 'date-fns';
 import { routes } from '../../constants/navigationRoutes';
 import { NavLink } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function WalletDashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -156,8 +158,7 @@ function WalletDashboard() {
         transactionAmount: parseFloat(formData.transactionAmount)
       };
 
-      await axios.post(urlconstant.addNewTransaction, transactionData);
-
+      const res = await axios.post(urlconstant.addNewTransaction, transactionData);
       setFormData({
         transactionName: '',
         transactionAmount: '',
@@ -169,19 +170,19 @@ function WalletDashboard() {
       setShowModal(false);
       const reqAcc = {
         accountId: formData.accountId,
-        transactionAmount:  formData.transactionAmount
+        transactionAmount: formData.transactionAmount
       };
 
       if (formData.transactionType == 'Income') {
-        await axios.post(urlconstant.updateIncomeByAccountId, reqAcc);
+        const res = await axios.post(urlconstant.updateIncomeByAccountId, reqAcc);
       } else {
-        await axios.post(urlconstant.updateExpenseByAccountId, reqAcc);
+        const res = await axios.post(urlconstant.updateExpenseByAccountId, reqAcc);
       }
-
+      toast.success(res.data.message);
       fetchData();
     } catch (error) {
       console.error('Error adding transaction:', error);
-      alert('Failed to add transaction');
+      toast.error('Failed to add transaction');
     }
   };
 
@@ -404,6 +405,7 @@ function WalletDashboard() {
           </NavLink>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
