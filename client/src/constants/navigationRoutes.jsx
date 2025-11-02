@@ -3,5 +3,6 @@ export const routes = {
     login : '/login',
     userWallet : '/wallet',
     transactionBudget : '/transactionBudget',
-    addEditBudget : `/transactionBudget/addEditBudget`
+    addEditBudget : `/transactionBudget/addEditBudget`,
+    profile : `/profile`
 }

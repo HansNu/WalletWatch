@@ -31,7 +31,7 @@ const BudgetApp = () => {
         period: 'Monthly',
         startDate: '',
         endDate: '',
-        categoryId : 0
+        categoryId: 0
     });
 
     const navLinkClass = ({ isActive }) => `flex flex-col items-center px-2 py-1 rounded transition-colors ${isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}`;
@@ -153,7 +153,7 @@ const BudgetApp = () => {
                 toast.error(res.data.message);
             }
             toast.success('Category deleted successfully!');
-            
+
             fetchAll();
         } catch (error) {
             console.error(error);
@@ -175,7 +175,7 @@ const BudgetApp = () => {
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
                                         <p className="text-sm text-gray-600 mb-1">Budget</p>
-                                        <p className="text-3xl font-bold">{budget.amount}</p>
+                                        <p className="text-3xl font-bold">{(budget.amount).toLocaleString('in')}</p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm text-gray-600 mb-1">Days Left</p>
@@ -185,7 +185,7 @@ const BudgetApp = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center text-sm mb-2">
-                                    <p className="text-gray-600">Spent: {budget.spent}</p>
+                                    <p className="text-gray-600">Spent: {(budget.spent).toLocaleString('in')}</p>
                                     <p className="text-gray-600">{((budget.spent / budget.amount) * 100).toFixed(1)}%</p>
                                 </div>
                                 <div className="w-full bg-gray-300 rounded-full h-3">
@@ -207,7 +207,7 @@ const BudgetApp = () => {
                                         <div>
                                             <p className="font-semibold text-lg">{category.name}</p>
                                             <p className="text-sm text-gray-600">
-                                                {category.spent}/{category.allocated}
+                                                {(category.spent).toLocaleString('in')}/{(category.allocated).toLocaleString('in')}
                                             </p>
                                         </div>
                                     </div>
@@ -320,29 +320,30 @@ const BudgetApp = () => {
                 </div>
             )}
 
-            <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
+            <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700">
                 <div className="max-w-md mx-auto flex justify-around items-center py-6">
+
                     <NavLink to={routes.walletDashboard} className={navLinkClass}>
-                        <button className="flex flex-col items-center text-gray-500">
-                            <LayoutGrid className="w-6 h-6" />
+                        <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                            <LayoutGrid className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" />
                         </button>
                     </NavLink>
 
                     <NavLink to={routes.userWallet} className={navLinkClass}>
-                        <button className="flex flex-col items-center text-gray-500">
-                            <Wallet className="w-6 h-6" />
+                        <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors">
+                            <Wallet className="w-7 h-7" />
                         </button>
                     </NavLink>
 
                     <NavLink to={routes.transactionBudget} className={navLinkClass}>
-                        <button className="flex flex-col items-center text-gray-600">
-                            <List className="w-6 h-6" />
+                        <button className="flex flex-col items-center text-gray-600 hover:text-white transition-colors">
+                            <List className="w-7 h-7" />
                         </button>
                     </NavLink>
 
-                    <NavLink to={''} className={navLinkClass}>
-                        <button className="flex flex-col items-center text-gray-500">
-                            <User className="w-6 h-6" />
+                    <NavLink to={routes.profile} className={navLinkClass}>
+                        <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors">
+                            <User className="w-7 h-7" />
                         </button>
                     </NavLink>
                 </div>

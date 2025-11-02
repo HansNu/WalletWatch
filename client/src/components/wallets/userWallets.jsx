@@ -300,30 +300,30 @@ function userWallets() {
       )}
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300">
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700">
         <div className="max-w-md mx-auto flex justify-around items-center py-6">
 
           <NavLink to={routes.walletDashboard} className={navLinkClass}>
-            <button className="flex flex-col items-center text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-              <LayoutGrid className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" />
+            <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+              <LayoutGrid className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" />
             </button>
           </NavLink>
 
           <NavLink to={routes.userWallet} className={navLinkClass}>
-            <button className="flex flex-col items-center text-gray-500">
-              <Wallet className="w-6 h-6" />
+            <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors">
+              <Wallet className="w-7 h-7" />
             </button>
           </NavLink>
 
           <NavLink to={routes.transactionBudget} className={navLinkClass}>
-            <button className="flex flex-col items-center text-gray-600">
-              <List className="w-6 h-6" />
+            <button className="flex flex-col items-center text-gray-600 hover:text-white transition-colors">
+              <List className="w-7 h-7" />
             </button>
           </NavLink>
 
-          <NavLink to={''} className={navLinkClass}>
-            <button className="flex flex-col items-center text-gray-500">
-              <User className="w-6 h-6" />
+          <NavLink to={routes.profile} className={navLinkClass}>
+            <button className="flex flex-col items-center text-gray-500 hover:text-white transition-colors">
+              <User className="w-7 h-7" />
             </button>
           </NavLink>
         </div>

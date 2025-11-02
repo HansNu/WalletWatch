@@ -11,6 +11,7 @@ function EditBudgetView() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const [userId, setUserId] = useState(null);
 
     function formatDt(isoString) {
         if (!isoString) return '';
@@ -39,8 +40,9 @@ function EditBudgetView() {
     );
 
     const fetchAll = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        const { data } = await supabase.auth.getUser();
+        if (!data) return;
+        setUserId(data.user.id);
     };
 
     useEffect(() => {
@@ -95,7 +97,7 @@ function EditBudgetView() {
 
     const addUpdateBudget = async (e) => {
         e.preventDefault();
-        const userId = location.state.budget.userId;
+        const user = userId;
         if (!userId) {
             toast.error('User not authenticated');
             return;
