@@ -48,7 +48,6 @@ export default function Login() {
     setLoading(true);
     setMessage('');
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setMessage('Passwords do not match!');
       setLoading(false);
@@ -68,7 +67,7 @@ export default function Login() {
     if (error) {
       setMessage(`Registration failed: ${error}`);
     } else {
-      setMessage('✅ Account created! You can proceed to log in');
+      setMessage('Account created! You can proceed to log in');
       setIsLogin(true);
     }
 
@@ -84,16 +83,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-4">
-            <Wallet className="w-8 h-8 text-blue-600" />
+            <Wallet className="w-8 h-8 text-slate-800" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Wallet Watch</h1>
           <p className="text-blue-100">Take control of your finances</p>
@@ -105,7 +102,7 @@ export default function Login() {
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
                 isLogin
-                  ? 'bg-white text-blue-600 shadow-sm'
+                  ? 'bg-white text-slate-600 shadow-sm'
                   : 'text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -115,7 +112,7 @@ export default function Login() {
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2.5 rounded-lg font-semibold transition-all ${
                 !isLogin
-                  ? 'bg-white text-blue-600 shadow-sm'
+                  ? 'bg-white text-slate-600 shadow-sm'
                   : 'text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -149,7 +146,7 @@ export default function Login() {
                       value={formData.firstName}
                       onChange={handleChange}
                       placeholder="John"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:border-transparent transition-all"
                     />
                   </div>
                 </div>
@@ -165,7 +162,7 @@ export default function Login() {
                       value={formData.lastName}
                       onChange={handleChange}
                       placeholder="Doe"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:border-transparent transition-all"
                     />
                   </div>
                 </div>
@@ -184,7 +181,7 @@ export default function Login() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:border-transparent transition-all"
                 />
               </div>
             </div>
@@ -201,7 +198,7 @@ export default function Login() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
@@ -226,7 +223,7 @@ export default function Login() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm your password"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:border-transparent transition-all"
                   />
                 </div>
               </div>
@@ -237,13 +234,13 @@ export default function Login() {
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded"
                   />
                   <span className="text-sm text-gray-600">Remember me</span>
                 </label>
                 <button
                   type="button"
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  className="text-sm text-slate-600 hover:text-slate-700 font-medium"
                 >
                   Forgot password?
                 </button>
@@ -253,7 +250,7 @@ export default function Login() {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-900 text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -268,18 +265,6 @@ export default function Login() {
               )}
             </button>
 
-            {!isLogin && (
-              <p className="text-xs text-gray-500 text-center">
-                By creating an account, you agree to our{' '}
-                <a href="#" className="text-blue-600 hover:underline">
-                  Terms of Service
-                </a>{' '}
-                and{' '}
-                <a href="#" className="text-blue-600 hover:underline">
-                  Privacy Policy
-                </a>
-              </p>
-            )}
           </div>
         </div>
 
