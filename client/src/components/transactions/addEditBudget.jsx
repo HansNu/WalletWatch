@@ -20,13 +20,14 @@ function EditBudgetView() {
         return d.toISOString().split('T')[0];
     }
 
-    const startDt = formatDt(location.state.budget.startDate);
-    const endDt = formatDt(location.state.budget.endDate);
+    const existingBudget = location.state.budget;
+    const startDt = formatDt(existingBudget.startDate);
+    const endDt = formatDt(existingBudget.endDate);
 
     const [budget, setBudget] = useState(
-        location.state.budget ?
+        existingBudget ?
             {
-                ...location.state.budget,
+                ...existingBudget,
                 startDate: startDt,
                 endDate: endDt
             }
@@ -128,10 +129,14 @@ function EditBudgetView() {
                 endDate: budget.endDate,
                 userId: userId
             };
+            let response = [];
+            if (existingBudget.budgetId) {
+                response = await axios.post(urlconstant.updateBudget, budgetReq);
+            } else {
+                response = await axios.post(urlconstant.addNewBudget, budgetReq);
+            }
 
-            const response = await axios.post(urlconstant.addNewBudget, budgetReq);
-
-            toast.success(response.data.message || 'Budget created successfully');
+            toast.success(response.data.message);
 
             setTimeout(() => {
                 navigate(routes.transactionBudget);

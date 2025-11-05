@@ -27,6 +27,7 @@ export const urlconstant = {
   getBudgetByBudgetId : `${baseUrl}budget/getBudgetByBudgetId`,
   getBudgetByUserId : `${baseUrl}budget/getBudgetByUserId`,
   addNewBudget: `${baseUrl}budget/addNewBudget`,
+  updateBudget: `${baseUrl}budget/updateBudget`,
 
   //category
   getTransactionCategoryByBudgetId : `${baseUrl}category/getTransactionCategoryByBudgetId`,

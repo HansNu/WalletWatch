@@ -122,23 +122,12 @@ function userWallets() {
     fetchAll();
   };
 
-  const updateAccount = async () => {
-    setFormAccounts({
-      accountName: '',
-      balance: 0,
-      accountCategory: '',
-      userId: ''
-    })
-  }
-
   return (
     <div className="min-h-screen bg-gray-800">
-      {/* Header */}
       <div className="top bg-gray-900 text-white p-6 text-center">
         <h1 className="text-xl font-semibold">Accounts</h1>
       </div>
 
-      {/* Total Balance Card */}
       <div className="max-w-3xl mx-auto text-black py-9">
         <div className="p-5 space-y-4">
 
@@ -149,7 +138,6 @@ function userWallets() {
             </div>
           </div>
 
-          {/* Balance and Liabilities */}
           <div className=" grid grid-cols-2 gap-4 mb-6">
             <div className="bg-gray-200 rounded-2xl p-4">
               <div className="text-gray-700 text-sm mb-1">Balance</div>
@@ -165,7 +153,6 @@ function userWallets() {
             </div>
           </div>
 
-          {/* Accounts List */}
           <h1 className='text-white'>Accounts</h1>
           {accounts.map((account) => (
             <div key={account.id} className="bg-gray-200 rounded-2xl p-4 mb-2 relative">
@@ -211,7 +198,6 @@ function userWallets() {
             </div>
           ))}
 
-          {/* Add New Account Button */}
           <button onClick={() => {
             setShowModal(true);
             setEditingAccount(null);

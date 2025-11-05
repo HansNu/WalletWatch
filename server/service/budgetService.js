@@ -61,7 +61,6 @@ class budgetService {
                 throw { status: 400, message: 'UserId is required' };
             }
 
-            // Calculate dates if not provided
             let finalStartDate = startDate;
             let finalEndDate = endDate;
 
@@ -71,27 +70,6 @@ class budgetService {
                 finalEndDate = dates.endDate;
             }
 
-            // Validate categories
-            // for (const category of categories) {
-            //     if (!category.name || !category.allocation) {
-            //         throw {
-            //             status: 400,
-            //             message: 'Each category must have a name and allocation'
-            //         };
-            //     }
-            // }
-
-            // // Calculate total allocation
-            // const totalAllocation = categories.reduce((sum, cat) => sum + parseFloat(cat.allocation), 0);
-
-            // if (totalAllocation > amount) {
-            //     throw {
-            //         status: 400,
-            //         message: `Total allocation (${totalAllocation}) cannot exceed budget amount (${amount})`
-            //     };
-            // }
-
-            // Insert budget
             const { data: budgetData, error: budgetError } = await supabase
                 .from('budget')
                 .insert({
@@ -108,24 +86,6 @@ class budgetService {
                 throw budgetError;
             }
 
-            //  // Insert categories
-            // const categoriesWithBudgetId = categories.map(cat => ({
-            //     budget_id: budgetData.id,
-            //     category_name: cat.name,
-            //     budget_allocation: parseFloat(cat.allocation),
-            // }));
-
-            // const { data: categoriesData, error: categoriesError } = await supabase
-            //     .from('transaction_category')
-            //     .insert(categoriesWithBudgetId)
-            //     .select();
-
-            // if (categoriesError) {
-            //     // Rollback: delete the budget if categories insertion fails
-            //     await supabase.from('budgets').delete().eq('id', budgetData.id);
-            //     throw categoriesError;
-            // }
-
             return {
                 success: true,
                 message: 'Budget created successfully',
@@ -140,6 +100,61 @@ class budgetService {
         }
     }
 
+    async updateBudget(reqBudget) {
+        try {
+            const { amount, period, startDate, endDate, userId } = reqBudget;
+
+            // Validation
+            if (!amount || amount <= 0) {
+                throw { status: 400, message: 'Amount must be greater than 0' };
+            }
+
+            if (!period) {
+                throw { status: 400, message: 'Period is required' };
+            }
+
+            if (!userId) {
+                throw { status: 400, message: 'UserId is required' };
+            }
+
+            let finalStartDate = startDate;
+            let finalEndDate = endDate;
+
+            if (!startDate || !endDate) {
+                const dates = calculateDates(period, startDate);
+                finalStartDate = dates.startDate;
+                finalEndDate = dates.endDate;
+            }
+
+            const { data: budgetData, error: budgetError } = await supabase
+                .from('budget')
+                .update({
+                    budget_amt: parseFloat(amount),
+                    budget_period: period.toLowerCase(),
+                    start_dt: finalStartDate,
+                    end_dt: finalEndDate
+                })
+                .select()
+                .single()
+                .eq('user_id', userId);
+
+            if (budgetError) {
+                throw budgetError;
+            }
+
+            return {
+                success: true,
+                message: 'Budget updated successfully',
+                data: {
+                    budget: budgetData,
+                }
+            };
+
+        } catch (error) {
+            console.error('Error in addNewBudget:', error);
+            throw error;
+        }
+    }
 }
 
 function calculateDates(period, startDate) {

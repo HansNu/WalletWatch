@@ -87,7 +87,7 @@ class AccountService {
       throw new Error('accountId and latestIncome are required');
     }
 
-    const { data:getAcc, error:errAcc } = await supabase
+    const { data: getAcc, error: errAcc } = await supabase
       .from('money_account').select('balance')
       .eq('account_id', reqExp.accountId);
 
@@ -133,14 +133,14 @@ class AccountService {
   }
 
   async addNewAccount(accData) {
-    if(!accData){
-      return {message : `Invalid Data`};
+    if (!accData) {
+      return { message: `Invalid Data` };
     }
     const { data, error } = await supabase
       .from('money_account')
       .insert([
-        { 
-          account_name: accData.accountName, 
+        {
+          account_name: accData.accountName,
           account_category: accData.accountCategory,
           balance: accData.balance,
           user_id: accData.userId
@@ -148,35 +148,35 @@ class AccountService {
       ])
       .select();
 
-      if(error){
-        return {
-          message : error
-        }
-      }
-
-      if(accData.accountCategory != 'Credit'){
-        await transactionService.addNewTransaction({
-          transactionAmount : accData.balance,
-          transactionType : 'Income',
-          transactionCategory : 'Income',
-          accountId : data[0].account_id,
-          userId : accData.userId,
-          transactionName : accData.accountName
-        })
-      }
-
+    if (error) {
       return {
-        message : `Account Added Successfully`,
-        account : data
+        message: error
       }
+    }
+
+    if (accData.accountCategory != 'Credit') {
+      await transactionService.addNewTransaction({
+        transactionAmount: accData.balance,
+        transactionType: 'Income',
+        transactionCategory: 'Income',
+        accountId: data[0].account_id,
+        userId: accData.userId,
+        transactionName: accData.accountName
+      })
+    }
+
+    return {
+      message: `Account Added Successfully`,
+      account: data
+    }
   }
 
   async updateAccount(accData) {
-    if(!accData){
-      return {message : `Invalid Data`};
+    if (!accData) {
+      return { message: `Invalid Data` };
     }
-    
-    const { data:getUser, error: errorUser } = await supabase
+
+    const { data: getUser, error: errorUser } = await supabase
       .from('money_account')
       .select('*')
       .eq('account_id', accData.accountId);
@@ -184,54 +184,64 @@ class AccountService {
     const { data, error } = await supabase
       .from('money_account')
       .update([
-        { 
-          account_name: accData.accountName, 
+        {
+          account_name: accData.accountName,
           account_category: accData.accountCategory,
           balance: accData.balance
         },
       ])
       .select().eq('account_id', accData.accountId);
 
-      if(error){
-        return {
-          message : error
-        }
-      }
-
-      const newBalance = Math.abs(getUser[0].balance - accData.balance)
-      if(accData.accountCategory != 'Credit'){
-        await transactionService.addNewTransaction({
-          transactionAmount : newBalance,
-          transactionType : 'Income',
-          transactionCategory : 'Income',
-          accountId : accData.accountId,
-          userId : getUser[0].user_id,
-          transactionName : accData.accountName
-        })
-      }
-
+    if (error) {
       return {
-        message : `Account Updated Successfully`,
-        account : data
+        message: error
       }
+    }
+
+    const newBalance = Math.abs(getUser[0].balance - accData.balance);
+
+    let transactionType, transactionCategory;
+    if (accData.balance < getUser[0].balance) {
+      transactionType = 'Expense';
+      transactionCategory = 'Other';
+    } else {
+      transactionType = 'Income';
+      transactionCategory = 'Income';
+    }
+
+    if (accData.accountCategory !== 'Credit') {
+      await transactionService.addNewTransaction({
+        transactionAmount: newBalance,
+        transactionType,
+        transactionCategory,
+        accountId: accData.accountId,
+        userId: getUser[0].user_id,
+        transactionName: accData.accountName
+      });
+    }
+
+    return {
+      message: `Account Updated Successfully`,
+      account: data
+    }
   }
 
 
 }
 
 function convertKeysToCamel(obj) {
-    if (typeof obj !== 'object' || obj === null) return obj;
+  if (typeof obj !== 'object' || obj === null) return obj;
 
-    if (Array.isArray(obj)) {
-      return obj.map(convertKeysToCamel);
-    }
-
-    const newObj = {};
-    for (const key in obj) {
-      const camelKey = key.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
-      newObj[camelKey] = convertKeysToCamel(obj[key]);
-    }
-    return newObj;
+  if (Array.isArray(obj)) {
+    return obj.map(convertKeysToCamel);
   }
+
+  const newObj = {};
+  for (const key in obj) {
+    const camelKey = key.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+    newObj[camelKey] = convertKeysToCamel(obj[key]);
+  }
+  return newObj;
+}
 
 module.exports = new AccountService();

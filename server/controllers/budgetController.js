@@ -63,6 +63,22 @@ class budgetController {
         }
     }
 
+    async updateBudget(req, res) {
+        try {
+            const reqBudget = req.body;
+            const result = await budgetService.updateBudget(reqBudget);
+
+            res.status(201).json(result);
+
+        } catch (error) {
+            const message = error.message;
+
+            res.status(status).json({
+                error: message,
+            });
+        }
+    }
+
 }
 
 module.exports = new budgetController();
