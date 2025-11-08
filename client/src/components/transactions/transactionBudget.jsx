@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, User, Wallet, List, LayoutGrid, Trash2, X } from 'lucide-react';
+import { Plus, Edit2, User, Wallet, List, LayoutGrid, Trash2, X, Clock } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { routes } from '../../constants/navigationRoutes';
 import { urlconstant } from '../../constants/urlConstant';
@@ -7,6 +7,7 @@ import { supabase } from '../../supabaseClient';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const BudgetApp = () => {
     const [showModal, setShowModal] = useState(false);
@@ -33,6 +34,7 @@ const BudgetApp = () => {
         endDate: '',
         categoryId: 0
     });
+    const navigate = useNavigate();
 
     const navLinkClass = ({ isActive }) => `flex flex-col items-center px-2 py-1 rounded transition-colors ${isActive ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}`;
 
@@ -236,6 +238,12 @@ const BudgetApp = () => {
                                             className="p-2 hover:bg-gray-300 rounded-lg transition-colors"
                                         >
                                             <Trash2 className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => navigate(`${routes.transactionHistory}?category=${encodeURIComponent(category.name)}`, {state: {userId}})}
+                                            className="p-2 hover:bg-gray-300 rounded-lg transition-colors"
+                                        >
+                                            <Clock className="w-5 h-5" />
                                         </button>
                                     </div>
                                 </div>

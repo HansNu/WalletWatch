@@ -10,6 +10,7 @@ import UserWallet from './components/wallets/userWallets.jsx';
 import TransactionBudget from './components/transactions/transactionBudget.jsx';
 import AddEditBudget from './components/transactions/addEditBudget.jsx';
 import ProfileSettings from './components/profile/profileSettings.jsx';
+import TransactionHistory from './components/transactionDetail/allTransactionHistory.jsx'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path={routes.transactionBudget} element={<TransactionBudget/>} />
         <Route path={routes.addEditBudget} element={<AddEditBudget/>} />
         <Route path={routes.profile} element={<ProfileSettings/>} />
+        <Route path={routes.transactionHistory} element={<TransactionHistory/>} />
       </Routes>
     </Router>
   );

@@ -20,6 +20,7 @@ export const urlconstant = {
   //transaction
   getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,
   getLatestTransactionRecord : `${baseUrl}transaction/getLatestTransactionRecord`,
+  getLatestTransactionRecordByCategory : `${baseUrl}transaction/getLatestTransactionRecordByCategory`,
   addNewTransaction : `${baseUrl}transaction/addNewTransaction`,
   getTransactionBasedOnUserIdAndDateRange : `${baseUrl}transaction/getTransactionBasedOnUserIdAndDateRange`,
 

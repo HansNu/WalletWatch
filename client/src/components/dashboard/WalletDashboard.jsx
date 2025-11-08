@@ -9,6 +9,7 @@ import { routes } from '../../constants/navigationRoutes';
 import { NavLink } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 function WalletDashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -28,6 +29,7 @@ function WalletDashboard() {
     accountId: '',
   });
   const [listCategory, setListCategory] = useState([]);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -219,7 +221,7 @@ function WalletDashboard() {
 
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Latest Transactions</h2>
-              <button className="flex items-center text-sm font-medium hover:opacity-70">
+              <button className="flex items-center text-sm font-medium hover:opacity-70 cursor-pointer" onClick={() => navigate(`${routes.transactionHistory}?category=All`)}>
                 View All <ArrowRight className="ml-1 w-4 h-4" />
               </button>
             </div>

@@ -33,6 +33,21 @@ class TransactionController {
     }
   }
 
+  async getLatestTransactionRecordByCategory(req, res) {
+    try {
+      const reqHistory = req.body;
+
+      if (!reqHistory) {
+        return res.status(400).json({ message: 'Invalid Request' });
+      }
+
+      const transactions = await transactionService.getLatestTransactionRecordByCategory(reqHistory);
+      return res.status(200).json(transactions);
+    } catch (err) {
+      return res.status(400).json({ message: err.message });
+    }
+  }
+
   async getTransactionBasedOnUserIdAndDateRange(req, res){
     const reqObj = req.body;
 

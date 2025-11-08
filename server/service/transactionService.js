@@ -39,6 +39,24 @@ class TransactionService {
     return data;
   }
 
+  async getLatestTransactionRecordByCategory(reqHistory) {
+    if (!reqHistory) {
+      throw new Error('userId is required');
+    }
+
+    const { data, error } = await supabase
+      .from('transaction_history')
+      .select('*')
+      .eq('user_id', reqHistory.userId).eq('transaction_category', reqHistory.categoryName)
+      .order('created_dt', { ascending: false });
+
+    if (error) {
+      throw new Error(error.message || 'Failed to fetch latest transactions');
+    }
+
+    return data;
+  }
+
   async getLatestIncome(accountId) {
     if (!accountId) {
       throw new Error('accountId is required');
