@@ -385,7 +385,7 @@ export default function ProfileSettings() {
             )}
 
             {/* Bottom Navigation */}
-            <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700">
+            <div className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700">
                 <div className="max-w-md mx-auto flex justify-around items-center py-6">
                     <NavLink to={routes.walletDashboard} className={navLinkClass}>
                         <LayoutGrid className="w-7 h-7" />

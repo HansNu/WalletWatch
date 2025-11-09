@@ -165,7 +165,7 @@ const BudgetApp = () => {
 
     return (
         <div className="relative">
-            <div className="min-h-screen bg-gray-800">
+            <div className="min-h-screen bg-gradient-to-b from-slate-800 to-slate-900">
                 <div className="top bg-gray-900 text-white p-6 text-center">
                     <h1 className="text-xl font-semibold">Budget</h1>
                 </div>
@@ -328,7 +328,7 @@ const BudgetApp = () => {
                 </div>
             )}
 
-            <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700">
+            <div className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700">
                 <div className="max-w-md mx-auto flex justify-around items-center py-6">
 
                     <NavLink to={routes.walletDashboard} className={navLinkClass}>
