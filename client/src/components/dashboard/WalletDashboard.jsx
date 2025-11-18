@@ -13,10 +13,10 @@ import { useNavigate } from 'react-router-dom';
 
 function WalletDashboard() {
   const [transactions, setTransactions] = useState([]);
+  const [userId, setUser] = useState(null);
   const [totalBalance, setTotalBalance] = useState(0);
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [balance, setBalance] = useState(0);
   const [liabilities, setLiabilities] = useState(0);
@@ -40,6 +40,7 @@ function WalletDashboard() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      setUser(user.id);
 
       const getBudget = await axios.post(urlconstant.getBudgetByUserId, { userId: user.id });
 
@@ -221,7 +222,14 @@ function WalletDashboard() {
 
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Latest Transactions</h2>
-              <button className="flex items-center text-sm font-medium hover:opacity-70 cursor-pointer" onClick={() => navigate(`${routes.transactionHistory}?category=All`)}>
+              <button
+                className="flex items-center text-sm font-medium hover:opacity-70 cursor-pointer"
+                onClick={async () => {
+                  navigate(`${routes.transactionHistory}?category=All`, {
+                    state: { userId: userId }
+                  });
+                }}
+              >
                 View All <ArrowRight className="ml-1 w-4 h-4" />
               </button>
             </div>

@@ -16,7 +16,7 @@ export default function TransactionHistory() {
     const location = useLocation();
     const [searchParams] = useSearchParams();
     const currUser = location.state;
-    const currCategory = searchParams.get('category');  
+    const currCategory = searchParams.get('category');
 
     useEffect(() => {
         fetchTransactions();
@@ -38,7 +38,12 @@ export default function TransactionHistory() {
                 categoryName : currCategory
             }
 
-            const transactionRecord = await axios.post(urlconstant.getLatestTransactionRecordByCategory, reqHistory);
+            let transactionRecord = [];
+            if(currCategory === 'All'){
+                transactionRecord = await axios.post(urlconstant.getLatestTransactionRecord, reqHistory);
+            } else {
+                transactionRecord = await axios.post(urlconstant.getLatestTransactionRecordByCategory, reqHistory);
+            }
 
             setTransactions(transactionRecord.data);
             setFilteredTransactions(transactionRecord.data);

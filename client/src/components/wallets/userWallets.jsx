@@ -90,12 +90,12 @@ function userWallets() {
         res = await axios.post(urlconstant.addNewAccount, accountData);
       }
 
-      setAccounts({
+      setFormAccounts({
         accountName: '',
         balance: 0,
         accountCategory: '',
         userId: ''
-      })
+      });
 
       setShowModal(false);
       toast.success(res.data.message || (isEditing ? 'Account updated!' : 'Account added!'));
