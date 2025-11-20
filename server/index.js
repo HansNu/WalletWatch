@@ -11,23 +11,26 @@ const categoryRoutes = require('./routes/tranCategoryRoutes');
 dotenv.config();
 
 const app = express();
-const port = 4200;
+const port = process.env.BACKEND_URL || 4200;
 const baseUrl = '/api';
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.json());
 
 app.get(baseUrl + '/message', (req, res) => {
-    res.json({message : 'Hello from the Express Server'});
+    res.json({ message: 'Hello from the Express Server' });
 });
 
-app.use(baseUrl, userRoutes);   
+app.use(baseUrl, userRoutes);
 app.use(baseUrl, accountRoutes);
 app.use(baseUrl, transactionRoutes);
 app.use(baseUrl, budgetRoutes);
 app.use(baseUrl, categoryRoutes);
 
-app.listen(port, () =>{
+app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 

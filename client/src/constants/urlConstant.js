@@ -1,39 +1,41 @@
 const baseUrl = 'http://localhost:4200/api/'
+const liveBaseUrl = 'https://walletwatch.fly.dev/'
 
 export const urlconstant = {
   baseUrl,
+  liveBaseUrl,
   //user
-  getUserByUserId : `${baseUrl}user/getUserByUserId`,
-  updateUserData : `${baseUrl}user/updateUserData`,
+  getUserByUserId : `${liveBaseUrl}user/getUserByUserId`,
+  updateUserData : `${liveBaseUrl}user/updateUserData`,
   
   //account
-  getTotalBalanceByUserId : `${baseUrl}account/getTotalBalanceByUserId`,
-  getLiabilitiesByUserId : `${baseUrl}account/getLiabilitiesByUserId`,
-  updateIncomeByAccountId : `${baseUrl}account/updateIncomeByAccountId`,
-  updateExpenseByAccountId : `${baseUrl}account/updateExpenseByAccountId`,
-  getAccountByUserId : `${baseUrl}account/getAccountByUserId`,
-  deleteAccountByAccountId : `${baseUrl}account/deleteAccountByAccountId`,
-  addNewAccount : `${baseUrl}account/addNewAccount`,
-  updateAccount : `${baseUrl}account/updateAccount`,
+  getTotalBalanceByUserId : `${liveBaseUrl}account/getTotalBalanceByUserId`,
+  getLiabilitiesByUserId : `${liveBaseUrl}account/getLiabilitiesByUserId`,
+  updateIncomeByAccountId : `${liveBaseUrl}account/updateIncomeByAccountId`,
+  updateExpenseByAccountId : `${liveBaseUrl}account/updateExpenseByAccountId`,
+  getAccountByUserId : `${liveBaseUrl}account/getAccountByUserId`,
+  deleteAccountByAccountId : `${liveBaseUrl}account/deleteAccountByAccountId`,
+  addNewAccount : `${liveBaseUrl}account/addNewAccount`,
+  updateAccount : `${liveBaseUrl}account/updateAccount`,
   
 
   //transaction
-  getIncomeExpenseByUserIdAndTransactionType : `${baseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,
-  getLatestTransactionRecord : `${baseUrl}transaction/getLatestTransactionRecord`,
-  getLatestTransactionRecordByCategory : `${baseUrl}transaction/getLatestTransactionRecordByCategory`,
-  addNewTransaction : `${baseUrl}transaction/addNewTransaction`,
-  getTransactionBasedOnUserIdAndDateRange : `${baseUrl}transaction/getTransactionBasedOnUserIdAndDateRange`,
+  getIncomeExpenseByUserIdAndTransactionType : `${liveBaseUrl}transaction/getIncomeExpenseByUserIdAndTransactionType`,
+  getLatestTransactionRecord : `${liveBaseUrl}transaction/getLatestTransactionRecord`,
+  getLatestTransactionRecordByCategory : `${liveBaseUrl}transaction/getLatestTransactionRecordByCategory`,
+  addNewTransaction : `${liveBaseUrl}transaction/addNewTransaction`,
+  getTransactionBasedOnUserIdAndDateRange : `${liveBaseUrl}transaction/getTransactionBasedOnUserIdAndDateRange`,
 
   //budget
-  getBudgetByBudgetId : `${baseUrl}budget/getBudgetByBudgetId`,
-  getBudgetByUserId : `${baseUrl}budget/getBudgetByUserId`,
-  addNewBudget: `${baseUrl}budget/addNewBudget`,
-  updateBudget: `${baseUrl}budget/updateBudget`,
+  getBudgetByBudgetId : `${liveBaseUrl}budget/getBudgetByBudgetId`,
+  getBudgetByUserId : `${liveBaseUrl}budget/getBudgetByUserId`,
+  addNewBudget: `${liveBaseUrl}budget/addNewBudget`,
+  updateBudget: `${liveBaseUrl}budget/updateBudget`,
 
   //category
-  getTransactionCategoryByBudgetId : `${baseUrl}category/getTransactionCategoryByBudgetId`,
-  addTransactionCategory : `${baseUrl}category/addNewTransactionCategory`,
-  updateTransactionCategory : `${baseUrl}category/updateTransactionCategory`,
-  deleteTransactionCategory : `${baseUrl}category/deleteTransactionCategory`,
+  getTransactionCategoryByBudgetId : `${liveBaseUrl}category/getTransactionCategoryByBudgetId`,
+  addTransactionCategory : `${liveBaseUrl}category/addNewTransactionCategory`,
+  updateTransactionCategory : `${liveBaseUrl}category/updateTransactionCategory`,
+  deleteTransactionCategory : `${liveBaseUrl}category/deleteTransactionCategory`,
   
 }
