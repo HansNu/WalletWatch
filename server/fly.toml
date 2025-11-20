@@ -7,9 +7,8 @@ processes = []
   PORT = "8080"
   NODE_ENV = "production"
 
-# 👇 Updated build section with correct Node.js buildpack
 [build]
-  builder = "heroku/buildpacks:20"
+  builder = "heroku/buildpacks:24"
   buildpacks = [
     "https://github.com/heroku/buildpack-nodejs"
   ]
