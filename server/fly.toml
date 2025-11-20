@@ -1,43 +1,16 @@
 app = "walletwatch"
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
+primary_region = "sin"
 
-[env]
-  PORT = "8080"
-  NODE_ENV = "production"
+[http_service]
+auto_start_machines = true
+auto_stop_machines = true
+force_https = true
+internal_port = 3_000
+min_machines_running = 0
+processes = [ "app" ]
 
-[build]
-  builder = "heroku/buildpacks:24"
-  buildpacks = [
-    "https://github.com/heroku/buildpack-nodejs"
-  ]
-
-[experimental]
-  auto_rollback = true
-
-[[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
-
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory = "1gb"
+memory_mb = 1_024
