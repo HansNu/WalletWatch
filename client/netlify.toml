@@ -1,9 +1,9 @@
 [build]
   base = "client"
-  command = "npm run dev"
-  publish = "dist" 
+  command = "rm -rf node_modules package-lock.json && npm install && npm run build"
+  publish = "dist"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[build.environment]
+  # Allow Supabase public keys in build output
+  # These are anon/public keys that are safe to expose in client-side code
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_KEY,VITE_SUPABASE_URL" 
