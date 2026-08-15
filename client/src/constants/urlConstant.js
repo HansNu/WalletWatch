@@ -1,8 +1,11 @@
-const baseUrl = 'http://localhost:4200/api/'
-const liveBaseUrl = 'https://walletwatch.fly.dev/'
+// The server now serves the built client itself (see server/index.js),
+// so API calls are same-origin in production and a relative path works
+// everywhere: EC2, local `vite build` preview, etc.
+// In local dev (`npm run dev`), Vite's proxy (see vite.config.js) forwards
+// this same '/api' path to the backend running on a different port.
+const liveBaseUrl = '/api/'
 
 export const urlconstant = {
-  baseUrl,
   liveBaseUrl,
   //user
   getUserByUserId : `${liveBaseUrl}user/getUserByUserId`,
