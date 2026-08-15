@@ -8,6 +8,7 @@ const accountRoutes = require('./routes/accountRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const categoryRoutes = require('./routes/tranCategoryRoutes');
+const path = require('path');
 
 dotenv.config();
 
@@ -36,7 +37,10 @@ app.use('/api', categoryRoutes);
 // CRITICAL: Use process.env.PORT (Fly.io sets this to 8080)
 // and bind to 0.0.0.0 (not localhost!)
 const PORT = process.env.PORT || 8080;
-
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+});
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on https://walletwatch.fly.dev (port ${PORT})`);
 });
