@@ -10,10 +10,12 @@ export default defineConfig({
     port: 5173,
     open: false,
     proxy: {
-      '/WalletAPI': {
-        target: 'http://localhost:4200',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/WalletAPI/, '/api')
+      // Forwards relative '/api/...' calls (see urlConstant.js) to the
+      // backend during local dev, so the client code doesn't need to know
+      // whether it's running against localhost or the deployed server.
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
       }
     }
   }
